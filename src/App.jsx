@@ -48,7 +48,7 @@ const EDITOR_FIELDS = [
   { name: 'valueDecimals',   type: 'text',                       label: 'Decimal places' },
   { name: 'paletteMode',     type: 'radio',                      label: 'Colour palette',    values: ['theme', 'custom'], defaultValue: 'theme', singleLine: true },
   { name: 'paletteTheme',    type: 'radio',                      label: 'Theme',             values: ['default', 'blues', 'warm', 'cool', 'pastel', 'earthy'], defaultValue: 'default', singleLine: false },
-  { name: 'paletteCustom',   type: 'text',                       label: 'Custom colours',    defaultValue: '' },
+  { name: 'paletteCustom',   type: 'text',                       label: 'Custom colours',    placeholder: 'e.g. #ff0000, #00cc88, #3c79c8', defaultValue: '' },
   { name: 'hideOverlapLabels', type: 'checkbox',                  label: 'Hide overlapping labels', defaultValue: true },
   { name: 'labelFontSize',   type: 'text',                       label: 'Label font size',   defaultValue: '12' },
   { name: 'labelFontStyle',  type: 'radio',                      label: 'Label font style',  values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
