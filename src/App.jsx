@@ -53,9 +53,11 @@ const EDITOR_FIELDS = [
   { name: 'labelLineLength',  type: 'text',                       label: 'Label line length',  defaultValue: '15' },
   { name: 'labelLineLength2', type: 'text',                       label: 'Label line indent',  defaultValue: '15' },
   { name: 'hideOverlapLabels', type: 'checkbox',                  label: 'Hide overlapping labels', defaultValue: true },
+  { name: 'labelFontFamily', type: 'text',                       label: 'Label font',        defaultValue: 'Inter', placeholder: 'e.g. Inter, Arial, Georgia' },
   { name: 'labelFontSize',   type: 'text',                       label: 'Label font size',   defaultValue: '12' },
   { name: 'labelFontStyle',  type: 'radio',                      label: 'Label font style',  values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
   { name: 'labelColor',      type: 'color',                      label: 'Label color' },
+  { name: 'legendFontFamily',type: 'text',                       label: 'Legend font',       defaultValue: 'Inter', placeholder: 'e.g. Inter, Arial, Georgia' },
   { name: 'legendFontSize',  type: 'text',                       label: 'Legend font size',  defaultValue: '12' },
   { name: 'legendFontStyle', type: 'radio',                      label: 'Legend font style', values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
   { name: 'legendColor',     type: 'color',                      label: 'Legend color' },
@@ -97,12 +99,14 @@ export default function App() {
   const valuePrefix   = config?.valuePrefix   || '';
   const valueSuffix   = config?.valueSuffix   || '';
   const valueDecimals = config?.valueDecimals || '';
-  const labelFontSize  = Math.max(8, parseInt(config?.labelFontSize)  || 12);
-  const labelFontStyle = config?.labelFontStyle  || 'normal';
-  const labelColor     = config?.labelColor      || null;
-  const legendFontSize = Math.max(8, parseInt(config?.legendFontSize) || 12);
-  const legendFontStyle= config?.legendFontStyle || 'normal';
-  const legendColor    = config?.legendColor     || null;
+  const labelFontFamily = config?.labelFontFamily || 'Inter';
+  const labelFontSize   = Math.max(8, parseInt(config?.labelFontSize)  || 12);
+  const labelFontStyle  = config?.labelFontStyle  || 'normal';
+  const labelColor      = config?.labelColor      || null;
+  const legendFontFamily= config?.legendFontFamily || 'Inter';
+  const legendFontSize  = Math.max(8, parseInt(config?.legendFontSize) || 12);
+  const legendFontStyle = config?.legendFontStyle || 'normal';
+  const legendColor     = config?.legendColor     || null;
   const legendIcon       = config?.legendIcon === 'rectangle' ? 'roundRect' : (config?.legendIcon || 'circle');
   const legendItemGap    = Math.max(0, parseInt(config?.legendItemGap)    || 10);
   const legendIconWidth  = Math.max(4, parseInt(config?.legendIconWidth)  || 25);
@@ -154,6 +158,7 @@ export default function App() {
       itemWidth: legendIconWidth,
       itemHeight: legendIconHeight,
       textStyle: {
+        fontFamily: legendFontFamily,
         fontSize: legendFontSize,
         ...fontStyleProps(legendFontStyle),
         ...(legendColor ? { color: legendColor } : {}),
@@ -178,6 +183,7 @@ export default function App() {
         label: {
           show: showLabels,
           formatter: labelFormatter,
+          fontFamily: labelFontFamily,
           fontSize: labelFontSize,
           overflow: 'none',
           ...fontStyleProps(labelFontStyle),
