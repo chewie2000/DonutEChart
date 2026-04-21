@@ -160,14 +160,7 @@ export default function App() {
       },
     };
 
-    // Shift chart center away from the legend edge so they don't overlap
-    const cx =
-      legendHAlign === 'left'  ? '58%' :
-      legendHAlign === 'right' ? '42%' : '50%';
-    const cy =
-      legendVAlign === 'top'    ? '58%' :
-      legendVAlign === 'bottom' ? '42%' : '50%';
-    const center = showLegend ? [cx, cy] : ['50%', '50%'];
+    const center = ['50%', '50%'];
 
     const option = {
       animation: false,
