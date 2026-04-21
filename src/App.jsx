@@ -39,6 +39,7 @@ const EDITOR_FIELDS = [
   { name: 'valuePrefix',     type: 'text',                       label: 'Value prefix' },
   { name: 'valueSuffix',     type: 'text',                       label: 'Value suffix' },
   { name: 'valueDecimals',   type: 'text',                       label: 'Decimal places' },
+  { name: 'hideOverlapLabels', type: 'checkbox',                  label: 'Hide overlapping labels', defaultValue: true },
   { name: 'labelFontSize',   type: 'text',                       label: 'Label font size',   defaultValue: '12' },
   { name: 'labelFontStyle',  type: 'radio',                      label: 'Label font style',  values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
   { name: 'labelColor',      type: 'color',                      label: 'Label color' },
@@ -67,7 +68,8 @@ export default function App() {
   const valueId  = config?.valueCol;
 
   const holeSize      = Math.min(95, Math.max(0, parseInt(config?.holeSize ?? '50') || 50));
-  const showLabels    = config?.showLabels    !== false;
+  const showLabels        = config?.showLabels        !== false;
+  const hideOverlapLabels = config?.hideOverlapLabels !== false;
   const labelType     = config?.labelType     || 'percent';
   const valuePrefix   = config?.valuePrefix   || '';
   const valueSuffix   = config?.valueSuffix   || '';
@@ -161,9 +163,11 @@ export default function App() {
           show: showLabels,
           formatter: labelFormatter,
           fontSize: labelFontSize,
+          overflow: 'none',
           ...fontStyleProps(labelFontStyle),
           ...(labelColor ? { color: labelColor } : {}),
         },
+        labelLayout: { hideOverlap: hideOverlapLabels },
         emphasis: {
           itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.3)' },
         },
