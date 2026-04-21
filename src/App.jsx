@@ -40,6 +40,7 @@ const EDITOR_FIELDS = [
   { name: 'source',          type: 'element' },
   { name: 'labelCol',        type: 'column',   source: 'source', label: 'Label column',    allowedTypes: ['text', 'number', 'integer', 'datetime'] },
   { name: 'valueCol',        type: 'column',   source: 'source', label: 'Value column',    allowedTypes: ['number', 'integer'] },
+  { name: 'outerRadius',     type: 'text',                       label: 'Outer radius %',   defaultValue: '55' },
   { name: 'holeSize',        type: 'text',                       label: 'Hole size %',      defaultValue: '50' },
   { name: 'showLabels',      type: 'checkbox',                   label: 'Show labels',      defaultValue: true },
   { name: 'labelType',       type: 'radio',                      label: 'Label shows',      values: ['percent', 'value', 'both'], defaultValue: 'percent', singleLine: true },
@@ -77,7 +78,8 @@ export default function App() {
   const labelId  = config?.labelCol;
   const valueId  = config?.valueCol;
 
-  const holeSize      = Math.min(95, Math.max(0, parseInt(config?.holeSize ?? '50') || 50));
+  const outerRadius   = Math.min(90, Math.max(10, parseInt(config?.outerRadius ?? '55') || 55));
+  const holeSize      = Math.min(outerRadius - 5, Math.max(0, parseInt(config?.holeSize ?? '50') || 50));
   const paletteMode   = config?.paletteMode  || 'theme';
   const paletteTheme  = config?.paletteTheme || 'default';
   const paletteCustom = config?.paletteCustom || '';
@@ -173,7 +175,7 @@ export default function App() {
       },
       series: [{
         type: 'pie',
-        radius: [`${holeSize}%`, '70%'],
+        radius: [`${holeSize}%`, `${outerRadius}%`],
         center,
         data: seriesData,
         label: {
