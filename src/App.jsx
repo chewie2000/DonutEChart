@@ -39,8 +39,9 @@ const EDITOR_FIELDS = [
   { name: 'valuePrefix',     type: 'text',                       label: 'Value prefix' },
   { name: 'valueSuffix',     type: 'text',                       label: 'Value suffix' },
   { name: 'valueDecimals',   type: 'text',                       label: 'Decimal places' },
-  { name: 'legendPosition',  type: 'radio',                      label: 'Legend position',  values: ['top', 'bottom', 'left', 'right'], defaultValue: 'left', singleLine: true },
-  { name: 'legendOrient',   type: 'radio',                      label: 'Legend layout',    values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
+  { name: 'legendHAlign',    type: 'radio',                      label: 'Legend horizontal', values: ['left', 'center', 'right'], defaultValue: 'left', singleLine: true },
+  { name: 'legendVAlign',    type: 'radio',                      label: 'Legend vertical',   values: ['top', 'middle', 'bottom'], defaultValue: 'middle', singleLine: true },
+  { name: 'legendOrient',    type: 'radio',                      label: 'Legend layout',     values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
   { name: 'legendWrap',      type: 'checkbox',                   label: 'Wrap legend',      defaultValue: true },
   { name: 'showLegend',      type: 'checkbox',                   label: 'Show legend',      defaultValue: true },
 ];
@@ -61,7 +62,8 @@ export default function App() {
   const valuePrefix   = config?.valuePrefix   || '';
   const valueSuffix   = config?.valueSuffix   || '';
   const valueDecimals = config?.valueDecimals || '';
-  const legendPos     = config?.legendPosition || 'left';
+  const legendHAlign  = config?.legendHAlign  || 'left';
+  const legendVAlign  = config?.legendVAlign  || 'middle';
   const legendOrient  = config?.legendOrient  || 'vertical';
   const legendWrap    = config?.legendWrap    !== false;
   const showLegend    = config?.showLegend    !== false;
@@ -91,30 +93,22 @@ export default function App() {
       return `${percent}%`;
     };
 
-    // Legend position anchors
-    const legendAnchor = {
-      left:   { left: 10, top: 'middle' },
-      right:  { right: 10, top: 'middle' },
-      top:    { top: 10, left: 'center' },
-      bottom: { bottom: 10, left: 'center' },
-    }[legendPos];
-
     const legendConfig = {
       show: showLegend,
       orient: legendOrient,
       type: legendWrap ? 'scroll' : 'plain',
-      ...legendAnchor,
+      left: legendHAlign,
+      top: legendVAlign,
     };
 
-    // Shift chart center away from legend so they don't overlap
-    const offset = showLegend ? '10%' : '0%';
+    // Shift chart center away from the legend edge so they don't overlap
     const cx =
-      legendPos === 'left'  ? '58%' :
-      legendPos === 'right' ? '42%' : '50%';
+      legendHAlign === 'left'  ? '58%' :
+      legendHAlign === 'right' ? '42%' : '50%';
     const cy =
-      legendPos === 'top'    ? '58%' :
-      legendPos === 'bottom' ? '42%' : '50%';
-    const center = [cx, cy];
+      legendVAlign === 'top'    ? '58%' :
+      legendVAlign === 'bottom' ? '42%' : '50%';
+    const center = showLegend ? [cx, cy] : ['50%', '50%'];
 
     const option = {
       animation: false,
