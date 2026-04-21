@@ -40,8 +40,8 @@ const EDITOR_FIELDS = [
   { name: 'valueSuffix',     type: 'text',                       label: 'Value suffix' },
   { name: 'valueDecimals',   type: 'text',                       label: 'Decimal places' },
   { name: 'legendPosition',  type: 'radio',                      label: 'Legend position',  values: ['top', 'bottom', 'left', 'right'], defaultValue: 'left', singleLine: true },
+  { name: 'legendOrient',   type: 'radio',                      label: 'Legend layout',    values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
   { name: 'legendWrap',      type: 'checkbox',                   label: 'Wrap legend',      defaultValue: true },
-  { name: 'legendMaxWidth',  type: 'text',                       label: 'Legend max width' },
   { name: 'showLegend',      type: 'checkbox',                   label: 'Show legend',      defaultValue: true },
 ];
 
@@ -62,12 +62,11 @@ export default function App() {
   const valueSuffix   = config?.valueSuffix   || '';
   const valueDecimals = config?.valueDecimals || '';
   const legendPos     = config?.legendPosition || 'left';
+  const legendOrient  = config?.legendOrient  || 'vertical';
   const legendWrap    = config?.legendWrap    !== false;
-  const legendMaxW    = parseInt(config?.legendMaxWidth) || null;
   const showLegend    = config?.showLegend    !== false;
 
   const data = useElementData(sourceId);
-  const cols = useElementColumns(sourceId);
 
   const labels = (data?.[labelId] ?? []).map(String);
   const values = (data?.[valueId] ?? []).map(Number);
@@ -79,8 +78,6 @@ export default function App() {
 
   useEffect(() => {
     if (!labels.length || !values.length) return;
-
-    const total = values.reduce((s, v) => s + v, 0);
 
     const seriesData = labels.map((name, i) => ({
       name,
@@ -94,29 +91,30 @@ export default function App() {
       return `${percent}%`;
     };
 
-    const isVertical = legendPos === 'top' || legendPos === 'bottom';
+    // Legend position anchors
+    const legendAnchor = {
+      left:   { left: 10, top: 'middle' },
+      right:  { right: 10, top: 'middle' },
+      top:    { top: 10, left: 'center' },
+      bottom: { bottom: 10, left: 'center' },
+    }[legendPos];
 
     const legendConfig = {
       show: showLegend,
-      orient: isVertical ? 'horizontal' : 'vertical',
-      [legendPos]: legendPos === 'top' || legendPos === 'bottom' ? 10 : 10,
-      ...(legendPos === 'left'   ? { left: 10, top: 'middle' } : {}),
-      ...(legendPos === 'right'  ? { right: 10, top: 'middle' } : {}),
-      ...(legendPos === 'top'    ? { top: 10, left: 'center' } : {}),
-      ...(legendPos === 'bottom' ? { bottom: 10, left: 'center' } : {}),
+      orient: legendOrient,
       type: legendWrap ? 'scroll' : 'plain',
-      ...(legendMaxW && !isVertical ? { width: legendMaxW } : {}),
-      ...(legendMaxW && isVertical  ? { width: legendMaxW } : {}),
+      ...legendAnchor,
     };
 
-    // Grid padding to make room for the legend
-    const gridPad = showLegend ? 140 : 20;
-    const center = [
-      legendPos === 'left'  ? `calc(50% + ${gridPad / 2}px)` :
-      legendPos === 'right' ? `calc(50% - ${gridPad / 2}px)` : '50%',
-      legendPos === 'top'    ? `calc(50% + ${gridPad / 2}px)` :
-      legendPos === 'bottom' ? `calc(50% - ${gridPad / 2}px)` : '50%',
-    ];
+    // Shift chart center away from legend so they don't overlap
+    const offset = showLegend ? '10%' : '0%';
+    const cx =
+      legendPos === 'left'  ? '58%' :
+      legendPos === 'right' ? '42%' : '50%';
+    const cy =
+      legendPos === 'top'    ? '58%' :
+      legendPos === 'bottom' ? '42%' : '50%';
+    const center = [cx, cy];
 
     const option = {
       animation: false,
