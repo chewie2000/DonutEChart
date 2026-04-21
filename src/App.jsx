@@ -7,12 +7,19 @@ import {
   useElementColumns,
 } from '@sigmacomputing/plugin';
 
-// ── Colour helpers ────────────────────────────────────────────────────────────
-const PALETTE = [
-  '#3c79c8', '#e06c4a', '#4caf7d', '#f0b429', '#9b59b6',
-  '#17a2b8', '#e91e63', '#8bc34a', '#ff7043', '#5c6bc0',
-  '#26a69a', '#ef5350', '#2d2a6e', '#607d8b', '#795548',
-];
+// ── Palettes ──────────────────────────────────────────────────────────────────
+const PALETTES = {
+  default: ['#3c79c8','#e06c4a','#4caf7d','#f0b429','#9b59b6','#17a2b8','#e91e63','#8bc34a','#ff7043','#5c6bc0','#26a69a','#ef5350'],
+  blues:   ['#003f88','#1565c0','#1976d2','#2196f3','#42a5f5','#64b5f6','#90caf9','#0d47a1','#0277bd','#01579b'],
+  warm:    ['#b71c1c','#e53935','#ff5722','#ff7043','#ff9800','#ffa726','#ffb300','#e91e63','#f06292','#d84315'],
+  cool:    ['#1a237e','#1565c0','#00838f','#00695c','#2e7d32','#558b2f','#5c6bc0','#26a69a','#0097a7','#388e3c'],
+  pastel:  ['#7eb8f7','#f7a07e','#7ef7b0','#f7d97e','#c47ef7','#7ef0f7','#f77eb8','#b0f77e','#f7b07e','#7e9cf7'],
+  earthy:  ['#795548','#a1887f','#6d4c41','#8d6e63','#4e342e','#bf8c6b','#d7a97a','#a0785a','#c49a6c','#7d5a4f'],
+};
+
+function parsePalette(raw) {
+  return (raw || '').split(',').map(s => s.trim()).filter(s => /^#[0-9a-fA-F]{3,6}$/.test(s));
+}
 
 // ── Value formatter ───────────────────────────────────────────────────────────
 function fmtValue(v, prefix, suffix, decimals) {
@@ -39,6 +46,9 @@ const EDITOR_FIELDS = [
   { name: 'valuePrefix',     type: 'text',                       label: 'Value prefix' },
   { name: 'valueSuffix',     type: 'text',                       label: 'Value suffix' },
   { name: 'valueDecimals',   type: 'text',                       label: 'Decimal places' },
+  { name: 'paletteMode',     type: 'radio',                      label: 'Colour palette',    values: ['theme', 'custom'], defaultValue: 'theme', singleLine: true },
+  { name: 'paletteTheme',    type: 'radio',                      label: 'Theme',             values: ['default', 'blues', 'warm', 'cool', 'pastel', 'earthy'], defaultValue: 'default', singleLine: false },
+  { name: 'paletteCustom',   type: 'text',                       label: 'Custom colours',    defaultValue: '' },
   { name: 'hideOverlapLabels', type: 'checkbox',                  label: 'Hide overlapping labels', defaultValue: true },
   { name: 'labelFontSize',   type: 'text',                       label: 'Label font size',   defaultValue: '12' },
   { name: 'labelFontStyle',  type: 'radio',                      label: 'Label font style',  values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
@@ -68,6 +78,13 @@ export default function App() {
   const valueId  = config?.valueCol;
 
   const holeSize      = Math.min(95, Math.max(0, parseInt(config?.holeSize ?? '50') || 50));
+  const paletteMode   = config?.paletteMode  || 'theme';
+  const paletteTheme  = config?.paletteTheme || 'default';
+  const paletteCustom = config?.paletteCustom || '';
+  const activePalette = paletteMode === 'custom'
+    ? (parsePalette(paletteCustom).length ? parsePalette(paletteCustom) : PALETTES.default)
+    : (PALETTES[paletteTheme] || PALETTES.default);
+
   const showLabels        = config?.showLabels        !== false;
   const hideOverlapLabels = config?.hideOverlapLabels !== false;
   const labelType     = config?.labelType     || 'percent';
@@ -106,7 +123,7 @@ export default function App() {
     const seriesData = labels.map((name, i) => ({
       name,
       value: values[i],
-      itemStyle: { color: PALETTE[i % PALETTE.length] },
+      itemStyle: { color: activePalette[i % activePalette.length] },
     }));
 
     const labelFormatter = ({ name, value, percent }) => {
