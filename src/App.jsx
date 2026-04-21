@@ -45,7 +45,7 @@ const EDITOR_FIELDS = [
   { name: 'legendFontSize',  type: 'text',                       label: 'Legend font size',  defaultValue: '12' },
   { name: 'legendFontStyle', type: 'radio',                      label: 'Legend font style', values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
   { name: 'legendColor',     type: 'color',                      label: 'Legend color' },
-  { name: 'legendIcon',      type: 'radio',                      label: 'Legend icon',       values: ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'], defaultValue: 'circle', singleLine: false },
+  { name: 'legendIcon',      type: 'radio',                      label: 'Legend icon',       values: ['circle', 'roundRect'], defaultValue: 'circle', singleLine: true },
   { name: 'legendHAlign',    type: 'radio',                      label: 'Legend horizontal', values: ['left', 'center', 'right'], defaultValue: 'left', singleLine: true },
   { name: 'legendVAlign',    type: 'radio',                      label: 'Legend vertical',   values: ['top', 'middle', 'bottom'], defaultValue: 'middle', singleLine: true },
   { name: 'legendOrient',    type: 'radio',                      label: 'Legend layout',     values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
