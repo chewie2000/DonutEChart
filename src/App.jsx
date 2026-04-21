@@ -45,6 +45,7 @@ const EDITOR_FIELDS = [
   { name: 'legendFontSize',  type: 'text',                       label: 'Legend font size',  defaultValue: '12' },
   { name: 'legendFontStyle', type: 'radio',                      label: 'Legend font style', values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
   { name: 'legendColor',     type: 'color',                      label: 'Legend color' },
+  { name: 'legendIcon',      type: 'radio',                      label: 'Legend icon',       values: ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'], defaultValue: 'circle', singleLine: false },
   { name: 'legendHAlign',    type: 'radio',                      label: 'Legend horizontal', values: ['left', 'center', 'right'], defaultValue: 'left', singleLine: true },
   { name: 'legendVAlign',    type: 'radio',                      label: 'Legend vertical',   values: ['top', 'middle', 'bottom'], defaultValue: 'middle', singleLine: true },
   { name: 'legendOrient',    type: 'radio',                      label: 'Legend layout',     values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
@@ -74,6 +75,7 @@ export default function App() {
   const legendFontSize = Math.max(8, parseInt(config?.legendFontSize) || 12);
   const legendFontStyle= config?.legendFontStyle || 'normal';
   const legendColor    = config?.legendColor     || null;
+  const legendIcon     = config?.legendIcon      || 'circle';
   const legendHAlign  = config?.legendHAlign  || 'left';
   const legendVAlign  = config?.legendVAlign  || 'middle';
   const legendOrient  = config?.legendOrient  || 'vertical';
@@ -116,6 +118,7 @@ export default function App() {
       type: legendWrap ? 'scroll' : 'plain',
       left: legendHAlign,
       top: legendVAlign,
+      icon: legendIcon,
       textStyle: {
         fontSize: legendFontSize,
         ...fontStyleProps(legendFontStyle),
