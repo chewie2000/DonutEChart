@@ -50,6 +50,8 @@ const EDITOR_FIELDS = [
   { name: 'paletteMode',     type: 'radio',                      label: 'Colour palette',    values: ['theme', 'custom'], defaultValue: 'theme', singleLine: true },
   { name: 'paletteTheme',    type: 'radio',                      label: 'Theme',             values: ['default', 'blues', 'warm', 'cool', 'pastel', 'earthy'], defaultValue: 'default', singleLine: false },
   { name: 'paletteCustom',   type: 'text',                       label: 'Custom colours',    placeholder: 'e.g. #ff0000, #00cc88, #3c79c8', defaultValue: '' },
+  { name: 'labelLineLength',  type: 'text',                       label: 'Label line length',  defaultValue: '15' },
+  { name: 'labelLineLength2', type: 'text',                       label: 'Label line indent',  defaultValue: '15' },
   { name: 'hideOverlapLabels', type: 'checkbox',                  label: 'Hide overlapping labels', defaultValue: true },
   { name: 'labelFontSize',   type: 'text',                       label: 'Label font size',   defaultValue: '12' },
   { name: 'labelFontStyle',  type: 'radio',                      label: 'Label font style',  values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
@@ -88,6 +90,8 @@ export default function App() {
     : (PALETTES[paletteTheme] || PALETTES.default);
 
   const showLabels        = config?.showLabels        !== false;
+  const labelLineLength   = Math.max(0, parseInt(config?.labelLineLength)  || 15);
+  const labelLineLength2  = Math.max(0, parseInt(config?.labelLineLength2) || 15);
   const hideOverlapLabels = config?.hideOverlapLabels !== false;
   const labelType     = config?.labelType     || 'percent';
   const valuePrefix   = config?.valuePrefix   || '';
@@ -186,6 +190,7 @@ export default function App() {
           ...fontStyleProps(labelFontStyle),
           ...(labelColor ? { color: labelColor } : {}),
         },
+        labelLine: { length: labelLineLength, length2: labelLineLength2 },
         labelLayout: { hideOverlap: hideOverlapLabels },
         emphasis: {
           itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.3)' },
