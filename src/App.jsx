@@ -39,6 +39,12 @@ const EDITOR_FIELDS = [
   { name: 'valuePrefix',     type: 'text',                       label: 'Value prefix' },
   { name: 'valueSuffix',     type: 'text',                       label: 'Value suffix' },
   { name: 'valueDecimals',   type: 'text',                       label: 'Decimal places' },
+  { name: 'labelFontSize',   type: 'text',                       label: 'Label font size',   defaultValue: '12' },
+  { name: 'labelFontStyle',  type: 'radio',                      label: 'Label font style',  values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
+  { name: 'labelColor',      type: 'color',                      label: 'Label color' },
+  { name: 'legendFontSize',  type: 'text',                       label: 'Legend font size',  defaultValue: '12' },
+  { name: 'legendFontStyle', type: 'radio',                      label: 'Legend font style', values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
+  { name: 'legendColor',     type: 'color',                      label: 'Legend color' },
   { name: 'legendHAlign',    type: 'radio',                      label: 'Legend horizontal', values: ['left', 'center', 'right'], defaultValue: 'left', singleLine: true },
   { name: 'legendVAlign',    type: 'radio',                      label: 'Legend vertical',   values: ['top', 'middle', 'bottom'], defaultValue: 'middle', singleLine: true },
   { name: 'legendOrient',    type: 'radio',                      label: 'Legend layout',     values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
@@ -62,6 +68,12 @@ export default function App() {
   const valuePrefix   = config?.valuePrefix   || '';
   const valueSuffix   = config?.valueSuffix   || '';
   const valueDecimals = config?.valueDecimals || '';
+  const labelFontSize  = Math.max(8, parseInt(config?.labelFontSize)  || 12);
+  const labelFontStyle = config?.labelFontStyle  || 'normal';
+  const labelColor     = config?.labelColor      || null;
+  const legendFontSize = Math.max(8, parseInt(config?.legendFontSize) || 12);
+  const legendFontStyle= config?.legendFontStyle || 'normal';
+  const legendColor    = config?.legendColor     || null;
   const legendHAlign  = config?.legendHAlign  || 'left';
   const legendVAlign  = config?.legendVAlign  || 'middle';
   const legendOrient  = config?.legendOrient  || 'vertical';
@@ -93,12 +105,22 @@ export default function App() {
       return `${percent}%`;
     };
 
+    const fontStyleProps = style => ({
+      fontWeight: style === 'bold' ? 'bold' : 'normal',
+      fontStyle:  style === 'italic' ? 'italic' : 'normal',
+    });
+
     const legendConfig = {
       show: showLegend,
       orient: legendOrient,
       type: legendWrap ? 'scroll' : 'plain',
       left: legendHAlign,
       top: legendVAlign,
+      textStyle: {
+        fontSize: legendFontSize,
+        ...fontStyleProps(legendFontStyle),
+        ...(legendColor ? { color: legendColor } : {}),
+      },
     };
 
     // Shift chart center away from the legend edge so they don't overlap
@@ -126,6 +148,9 @@ export default function App() {
         label: {
           show: showLabels,
           formatter: labelFormatter,
+          fontSize: labelFontSize,
+          ...fontStyleProps(labelFontStyle),
+          ...(labelColor ? { color: labelColor } : {}),
         },
         emphasis: {
           itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.3)' },
