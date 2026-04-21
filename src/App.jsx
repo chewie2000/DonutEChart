@@ -46,6 +46,9 @@ const EDITOR_FIELDS = [
   { name: 'legendFontStyle', type: 'radio',                      label: 'Legend font style', values: ['normal', 'bold', 'italic'], defaultValue: 'normal', singleLine: true },
   { name: 'legendColor',     type: 'color',                      label: 'Legend color' },
   { name: 'legendIcon',      type: 'radio',                      label: 'Legend icon',       values: ['circle', 'rectangle'], defaultValue: 'circle', singleLine: true },
+  { name: 'legendItemGap',   type: 'text',                       label: 'Legend item gap',   defaultValue: '10' },
+  { name: 'legendIconWidth', type: 'text',                       label: 'Legend icon width', defaultValue: '25' },
+  { name: 'legendIconHeight',type: 'text',                       label: 'Legend icon height',defaultValue: '14' },
   { name: 'legendHAlign',    type: 'radio',                      label: 'Legend horizontal', values: ['left', 'center', 'right'], defaultValue: 'left', singleLine: true },
   { name: 'legendVAlign',    type: 'radio',                      label: 'Legend vertical',   values: ['top', 'middle', 'bottom'], defaultValue: 'middle', singleLine: true },
   { name: 'legendOrient',    type: 'radio',                      label: 'Legend layout',     values: ['horizontal', 'vertical'], defaultValue: 'vertical', singleLine: true },
@@ -75,7 +78,10 @@ export default function App() {
   const legendFontSize = Math.max(8, parseInt(config?.legendFontSize) || 12);
   const legendFontStyle= config?.legendFontStyle || 'normal';
   const legendColor    = config?.legendColor     || null;
-  const legendIcon     = config?.legendIcon === 'rectangle' ? 'roundRect' : (config?.legendIcon || 'circle');
+  const legendIcon       = config?.legendIcon === 'rectangle' ? 'roundRect' : (config?.legendIcon || 'circle');
+  const legendItemGap    = Math.max(0, parseInt(config?.legendItemGap)    || 10);
+  const legendIconWidth  = Math.max(4, parseInt(config?.legendIconWidth)  || 25);
+  const legendIconHeight = Math.max(4, parseInt(config?.legendIconHeight) || 14);
   const legendHAlign  = config?.legendHAlign  || 'left';
   const legendVAlign  = config?.legendVAlign  || 'middle';
   const legendOrient  = config?.legendOrient  || 'vertical';
@@ -119,6 +125,9 @@ export default function App() {
       left: legendHAlign,
       top: legendVAlign,
       icon: legendIcon,
+      itemGap: legendItemGap,
+      itemWidth: legendIconWidth,
+      itemHeight: legendIconHeight,
       textStyle: {
         fontSize: legendFontSize,
         ...fontStyleProps(legendFontStyle),
